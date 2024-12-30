@@ -5,8 +5,12 @@ name = "pypi"
 
 [packages]
 django = "*"
+djangorestframework = "*"
+django-environ = "*"
+djangorestframework-simplejwt = "*"
+pandas = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.10"
+python_version = "3.12"
