@@ -8,6 +8,9 @@ django = "*"
 djangorestframework = "*"
 django-environ = "*"
 djangorestframework-simplejwt = "*"
+django-celery = "*"
+celery = "*"
+redis = "*"
 pandas = "*"
 
 [dev-packages]

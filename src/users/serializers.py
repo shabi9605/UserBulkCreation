@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from .models import User
+from .models import User, BulkUploadLogs
 import pandas as pd
 from rest_framework.exceptions import ValidationError
-
+from .tasks import create_users
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -76,3 +76,46 @@ class FileUploadSerializer(serializers.Serializer):
             "rejected_records": rejected_reasons,
         }
         return return_response
+    
+
+
+
+class FileBackgroundUploadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BulkUploadLogs
+        fields = ['id', 'file', 'response', 'status']
+        extra_kwargs = {'response':{'required':False}}
+
+    REQUIRED_COLUMNS = {"name", "email", "age"}
+
+    def validate(self, data):
+        # Read the uploaded CSV file
+        try:
+            csv_file_data = pd.read_csv(data["file"])
+        except Exception as e:
+            raise ValidationError(
+                f"Unable to read the file. Ensure it is a valid CSV. Error: {str(e)}"
+            )
+
+        # Get the column headers, normalize them (lowercase and strip)
+        column_headers = set(header.lower().strip() for header in csv_file_data.columns)
+
+        # Find missing columns
+        missing_columns = self.REQUIRED_COLUMNS - column_headers
+        if missing_columns:
+            raise ValidationError(
+                f"The following required columns are missing: {', '.join(missing_columns)}"
+            )
+
+        return data
+
+    # def create(self, validated_data):
+    #     """
+    #     Process the CSV data, validate each row, and save valid records to the database.
+    #     """
+    #     csv_file_data_json = validated_data["csv_file_data"]
+        
+    #     # Pass the serialized data to Celery
+    #     create_users.delay(csv_file_data_json)
+        
+    #     return validated_data
