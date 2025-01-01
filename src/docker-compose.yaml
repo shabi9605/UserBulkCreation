@@ -13,7 +13,7 @@ services:
       - type: bind
         source: .
         target: /app
-    command: watchfiles --filter python celery.__main__.main --args '-A ct_backend.celery_app worker -l INFO'
+    command: watchfiles --filter python celery.__main__.main --args '-A config worker -l INFO'
 
   server:
     <<: *celery
@@ -26,13 +26,4 @@ services:
     ports:
       - 6379:6379
 
-  db:
-    image: postgres
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
-    environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    ports:
-      - 5432:5432
+  

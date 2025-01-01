@@ -34,25 +34,4 @@ class UploadBulkDataViewSet(viewsets.ModelViewSet):
     queryset = BulkUploadLogs.objects.filter()
     permission_classes = []
     
-    @action(
-        methods=["post"],
-        detail=False,
-        serializer_class=FileBackgroundUploadSerializer,  # Serializer used for the custom action
-        url_path="bulk-upload-background",  # URL path for this action
-        parser_classes=[parsers.MultiPartParser],  # Allow handling file uploads
-    )
-    def upload_bulk_users_background(self, request, *args, **kwargs):
-        """
-        Custom action to handle bulk user uploads in the background.
-
-        Accepts a file upload, validates it, and processes it using the serializer.
-        """
-        # Deserialize and validate the incoming data
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        
-        # Save the uploaded data (handled by the serializer)
-        data = serializer.save()
-
-        # Return a success response
-        return Response({'results': "File uploaded successfully"})
+    
