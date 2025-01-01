@@ -12,6 +12,9 @@ django-celery = "*"
 celery = "*"
 redis = "*"
 pandas = "*"
+pytest = "*"
+pytest-cov = "*"
+pytest-django = "*"
 
 [dev-packages]
 
